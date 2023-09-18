@@ -142,3 +142,154 @@ function getBooks() {
 function getBook(id) {
   return data.find((d) => d.id === id);
 }
+
+/*
+// start quokka to see res
+
+////////////////// destructuring /////////////////////////
+const book = getBook(3);
+book;
+// const author = book.author
+// const title = book.title;
+
+const { title, author, pages, publicationDate, genres, hasMovieAdaptation } =
+  book;
+console.log(author, title, genres);
+
+// const primaryGenre = genres[0];
+// const secondaryGenre = genres[0];
+
+////////////////// rest/spread operators /////////////////////////
+const [primaryGenre, secondaryGenre, ...otherGenres] = genres;
+
+console.log(primaryGenre, secondaryGenre, otherGenres);
+
+const newGenresBad = [genres, "epic fantasy"];
+console.log(newGenresBad);
+
+const newGenres = [...genres, "epic fantasy"];
+console.log(newGenres);
+
+// spread with objects
+const updatedBook = {
+  ...book,
+  // adding new property
+  moviePublicationDate: "2001-12-19",
+
+  // overwriting existing property
+  pages: 1210,
+};
+console.log(updatedBook);
+
+////////////////// template literals /////////////////////////
+const summary = `${title},a ${pages} page book was written by ${author}`;
+summary;
+
+////////////////// ternaries /////////////////////////
+const pagesRange = pages > 1000 ? "over a thousand" : "less than thousand";
+pagesRange;
+
+console.log(`the book has ${pagesRange} pages`);
+
+////////////////// arrow functions /////////////////////////
+// function getYear(str) {
+//   return str.split("-")[0];
+// }
+
+const getYear = (str) => str.split("-")[0];
+
+console.log(getYear(publicationDate));
+
+////////////////// short circuiting and logical operators /////////////////////////
+console.log(hasMovieAdaptation && "this book has a movie");
+console.log("jonas" && "some string");
+console.log(0 && "some string");
+
+console.log(book.translations.spanish);
+const spanishTranslation = book.translations.spanish || "NO SPANISH";
+console.log(spanishTranslation);
+
+console.log(book.reviews.librarything?.reviewsCount);
+const countWrong = book.reviews.librarything?.reviewsCount || "no data";
+countWrong;
+
+const count = book.reviews.librarything?.reviewsCount ?? "no data";
+count;
+
+////////////////// optional chaining /////////////////////////
+function getTotalReviewCount(book) {
+  const goodread = book.reviews.goodreads.reviewsCount;
+  const librarything = book.reviews.librarything?.reviewsCount ?? 0;
+
+  return goodread + librarything;
+}
+
+console.log(getTotalReviewCount(book));
+*/
+////////////////// array map method /////////////////////////
+
+function getTotalReviewCount(book) {
+  const goodread = book.reviews.goodreads.reviewsCount;
+  const librarything = book.reviews.librarything?.reviewsCount ?? 0;
+
+  return goodread + librarything;
+}
+
+const books = getBooks();
+// const x = [1, 2, 3, 4, 5].map((el) => el * 2);
+// console.log(x);
+
+const titles = books.map((book) => book.title);
+titles;
+
+const essentialData = books.map((book) => ({
+  title: book.title,
+  author: book.author,
+  reviewsCount: getTotalReviewCount(book),
+}));
+essentialData;
+
+////////////////// array filter method /////////////////////////
+const longBooksWithMovie = books
+  .filter((book) => book.pages > 500)
+  .filter((book) => book.hasMovieAdaptation);
+longBooksWithMovie;
+
+const adventureBooks = books
+  .filter((books) => books.genres.includes("adventure"))
+  .map((book) => book.title);
+adventureBooks;
+
+////////////////// array reduce method /////////////////////////
+const pagesAllBooks = books.reduce((sum, book) => sum + book.pages, 0);
+pagesAllBooks;
+
+////////////////// array sort method /////////////////////////
+const x = [3, 7, 1, 9, 6];
+const sorted = x.slice().sort((a, b) => a - b); // mutates original array so make copy with slice
+sorted;
+x;
+
+const sortedByPages = books.slice().sort((a, b) => a.pages - b.pages);
+sortedByPages;
+
+////////////////// working with immutable arrays /////////////////////////
+// 1) add book object to array
+const newBook = {
+  id: 6,
+  title: "Harry potter and the Chamber of Secrets",
+  author: "J.K. Rowling",
+};
+
+const booksAfterAdd = [...books, newBook];
+booksAfterAdd;
+
+// 2) delete object from array
+const booksAfterDelete = booksAfterAdd.filter((book) => book.id !== 3);
+booksAfterDelete;
+
+// 3) update book object in the array
+const booksAfterUpdate = booksAfterDelete.map((book) =>
+  book.id === 1 ? { ...book, pages: 12102123123 } : book
+);
+booksAfterUpdate;
