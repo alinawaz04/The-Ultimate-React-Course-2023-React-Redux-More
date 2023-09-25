@@ -43,9 +43,72 @@ const questions = [
 export default function App() {
   return (
     <div>
-      <Steps />
       <Counter />
+      <Steps />
       <Flashcards />
+    </div>
+  );
+}
+
+function Counter() {
+  const [date, setDate] = useState(new Date().toDateString());
+  const [step, setStep] = useState(1);
+  const [count, setCount] = useState(0);
+  const [range, setRange] = useState(1);
+
+  function handleCountPrevious() {
+    setCount((c) => c - range);
+
+    setDate((dateString) => {
+      const date = new Date(dateString);
+      date.setDate(date.getDate() - range);
+      return date.toDateString();
+    });
+  }
+
+  function handleCountNext() {
+    setCount((c) => c + range);
+
+    setDate((dateString) => {
+      const date = new Date(dateString);
+      date.setDate(date.getDate() + range);
+      return date.toDateString();
+    });
+  }
+
+  function handleRange(e) {
+    setRange(Number(e.target.value));
+  }
+
+  return (
+    <div>
+      <div className="range">
+        <input
+          onChange={handleRange}
+          type="range"
+          min={1}
+          max={10}
+          defaultValue={1}
+        />
+        <p>{range}</p>
+      </div>
+
+      <div className="option">
+        <button onClick={handleCountPrevious}>-</button>
+        <input
+          value={count}
+          onChange={(e) => setCount(Number(e.target.value))}
+        ></input>
+
+        <button onClick={handleCountNext}>+</button>
+      </div>
+
+      <p>
+        {count === 0 && "Today is "}
+        {count > 0 && `${count} day(s) from today is `}
+        {count < 0 && `${Math.abs(count)} day(s) before today was `}
+        {date}
+      </p>
     </div>
   );
 }
@@ -97,63 +160,6 @@ function Steps() {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function Counter() {
-  const [date, setDate] = useState(new Date().toDateString());
-  const [step, setStep] = useState(1);
-  const [count, setCount] = useState(0);
-
-  function handleStepPrevious() {
-    if (step > 1) setStep((s) => s - 1);
-  }
-
-  function handleStepNext() {
-    setStep((s) => s + 1);
-  }
-
-  function handleCountPrevious() {
-    setCount((c) => c - step);
-
-    setDate((dateString) => {
-      const date = new Date(dateString);
-      date.setDate(date.getDate() - step);
-      return date.toDateString();
-    });
-  }
-
-  function handleCountNext() {
-    setCount((c) => c + step);
-
-    setDate((dateString) => {
-      const date = new Date(dateString);
-      date.setDate(date.getDate() + step);
-      return date.toDateString();
-    });
-  }
-
-  return (
-    <div>
-      <div className="option">
-        <button onClick={handleStepPrevious}>-</button>
-        <p>Step: {step}</p>
-        <button onClick={handleStepNext}>+</button>
-      </div>
-
-      <div className="option">
-        <button onClick={handleCountPrevious}>-</button>
-        <p>Count: {count}</p>
-        <button onClick={handleCountNext}>+</button>
-      </div>
-
-      <p>
-        {count === 0 && "Today is "}
-        {count > 0 && `${count} day(s) from today is `}
-        {count < 0 && `${Math.abs(count)} day(s) before today was `}
-        {date}
-      </p>
     </div>
   );
 }

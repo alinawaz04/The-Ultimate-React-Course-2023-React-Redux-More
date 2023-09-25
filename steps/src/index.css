@@ -129,6 +129,10 @@ h3 {
   align-items: center;
 }
 
+.range {
+  display: flex;
+}
+
 .option button {
   height: 50%;
 }
