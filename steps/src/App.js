@@ -51,33 +51,33 @@ export default function App() {
 }
 
 function Counter() {
-  const [date, setDate] = useState(new Date().toDateString());
-  const [step, setStep] = useState(1);
+  // const [date, setDate] = useState(new Date().toDateString());
   const [count, setCount] = useState(0);
   const [range, setRange] = useState(1);
 
+  const date = new Date();
+  date.setDate(date.getDate() + count);
+
   function handleCountPrevious() {
     setCount((c) => c - range);
-
-    setDate((dateString) => {
-      const date = new Date(dateString);
-      date.setDate(date.getDate() - range);
-      return date.toDateString();
-    });
   }
 
   function handleCountNext() {
     setCount((c) => c + range);
-
-    setDate((dateString) => {
-      const date = new Date(dateString);
-      date.setDate(date.getDate() + range);
-      return date.toDateString();
-    });
   }
 
   function handleRange(e) {
     setRange(Number(e.target.value));
+  }
+
+  function handleCountInputChange(e) {
+    const newCount = Number(e.target.value);
+    setCount(newCount);
+  }
+
+  function handleReset() {
+    setCount(0);
+    setRange(1);
   }
 
   return (
@@ -95,10 +95,7 @@ function Counter() {
 
       <div className="option">
         <button onClick={handleCountPrevious}>-</button>
-        <input
-          value={count}
-          onChange={(e) => setCount(Number(e.target.value))}
-        ></input>
+        <input value={count} onChange={handleCountInputChange}></input>
 
         <button onClick={handleCountNext}>+</button>
       </div>
@@ -107,8 +104,14 @@ function Counter() {
         {count === 0 && "Today is "}
         {count > 0 && `${count} day(s) from today is `}
         {count < 0 && `${Math.abs(count)} day(s) before today was `}
-        {date}
+        {date.toDateString()}
       </p>
+
+      {count !== 0 || range !== 1 ? (
+        <div>
+          <button onClick={handleReset}>Reset</button>
+        </div>
+      ) : null}
     </div>
   );
 }
