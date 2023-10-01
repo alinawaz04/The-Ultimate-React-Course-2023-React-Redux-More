@@ -9,10 +9,102 @@ const messages = [
 export default function App() {
   return (
     <div>
+      <TipCalc />
       <Steps />
       {/* <Counter /> */}
     </div>
   );
+}
+
+function TipCalc() {
+  const [bill, setBill] = useState(0);
+  const [tip1, setTip1] = useState(0);
+  const [tip2, setTip2] = useState(0);
+
+  function handleSetBill(bill) {
+    setBill(bill);
+    console.log(bill);
+  }
+
+  function handleSetTip1(tipPercentage) {
+    if (bill !== null) {
+      const tipAmount = (bill * tipPercentage).toFixed(2); // Calculate tip and round to two decimal places
+      setTip1(tipAmount);
+      console.log(tip1);
+    }
+  }
+
+  function handleSetTip2(tipPercentage) {
+    if (bill !== null) {
+      const tipAmount = (bill * tipPercentage).toFixed(2); // Calculate tip and round to two decimal places
+      setTip2(tipAmount);
+    }
+  }
+
+  function handleReset() {
+    setBill(0);
+    setTip1(0);
+    setTip2(0);
+  }
+
+  return (
+    <div>
+      <Input onSetBill={handleSetBill} type="text">
+        How much was the bill?
+      </Input>
+      <Input handler={handleSetTip1} type="dropdown">
+        How did you like the service?
+      </Input>
+      <Input handler={handleSetTip2} type="dropdown">
+        How did your friend like the service?
+      </Input>
+
+      <Output bill={bill} onSetBill={handleSetBill} tip1={tip1} tip2={tip2} />
+
+      <Reset onReset={handleReset} />
+    </div>
+  );
+}
+
+function Input({ children, type, onSetBill, handler }) {
+  if (type === "dropdown") {
+    return (
+      <div>
+        <label htmlFor="dropdown">{children}</label>
+        <select
+          defaultValue="1"
+          onChange={(e) => handler(Number(e.target.value))}
+        >
+          <option value={0}>Bad(0%)</option>
+          <option value={0.05}>It was okay(5%)</option>
+          <option value={0.1}>It was good(10%)</option>
+          <option value={0.2}>Amazing!(20%)</option>
+        </select>
+      </div>
+    );
+  }
+  return (
+    <div>
+      {children}
+      <input
+        onChange={(e) => onSetBill(Number(e.target.value))}
+        type={type}
+      ></input>
+    </div>
+  );
+}
+
+function Output({ bill, tip1, tip2 }) {
+  const total = Number(bill) + Number(tip1) + Number(tip2);
+  return (
+    <h1>
+      You pay ${total} (${bill} + ${Number(tip1) + Number(tip2)})
+    </h1>
+  );
+}
+
+function Reset({ onReset }) {
+  return <button onClick={onReset}>Reset</button>;
 }
 
 function Counter() {
