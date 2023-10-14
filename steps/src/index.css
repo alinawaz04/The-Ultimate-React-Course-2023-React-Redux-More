@@ -106,3 +106,10 @@ h3 {
 .option button {
   height: 50%;
 }
+
+.box {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  background-color: #f7f7f7;
+}
