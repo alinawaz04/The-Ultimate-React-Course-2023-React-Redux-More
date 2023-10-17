@@ -70,15 +70,23 @@ function TabContent({ item }) {
   }
 
   function handleTripleInc() {
-    setLikes(likes + 1);
-    setLikes(likes + 1);
-    setLikes(likes + 1);
+    // setLikes(likes + 1);
+    // setLikes(likes + 1);
+    // setLikes(likes + 1);
+
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
   }
 
   function handleUndo() {
     setShowDetails(true);
     setLikes(0);
     console.log(likes);
+  }
+
+  function handleUndoLater() {
+    setTimeout(handleUndo, 2000);
   }
 
   return (
@@ -100,7 +108,7 @@ function TabContent({ item }) {
 
       <div className="tab-undo">
         <button onClick={handleUndo}>Undo</button>
-        <button>Undo in 2s</button>
+        <button onClick={handleUndoLater}>Undo in 2s</button>
       </div>
     </div>
   );
