@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const messages = [
   "Learn React ⚛️",
@@ -7,38 +7,62 @@ const messages = [
 ];
 
 export default function App() {
+  return <CurrencyConverter />;
+}
+// https://api.frankfurter.app/latest?amount=100&from=EUR&to=USD
+function CurrencyConverter() {
+  const [amount, setAmount] = useState("1");
+  const [from, setFrom] = useState("USD");
+  const [to, setTo] = useState("EUR");
+  const [output, setOutput] = useState("");
+
+  useEffect(
+    function () {
+      async function fetchConversion() {
+        try {
+          const res = await fetch(
+            `https://api.frankfurter.app/latest?amount=${amount}&from=${from}&to=${to}`
+          );
+
+          if (!res.ok) throw new Error("Something went wrong...");
+
+          const data = await res.json();
+
+          console.log(Object.values(data.rates)[0]);
+          setOutput(Object.values(data.rates)[0]);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      if (from === to) return setOutput(amount);
+      fetchConversion();
+    },
+    [amount, from, to]
+  );
+
   return (
     <div>
-      <TextExpander>
-        Space travel is the ultimate adventure! Imagine soaring past the stars
-        and exploring new worlds. It's the stuff of dreams and science fiction,
-        but believe it or not, space travel is a real thing. Humans and robots
-        are constantly venturing out into the cosmos to uncover its secrets and
-        push the boundaries of what's possible.
-      </TextExpander>
-
-      <TextExpander
-        collapsedNumWords={20}
-        expandButtonText="Show text"
-        collapseButtonText="Collapse text"
-        buttonColor="#ff6622"
-      >
-        Space travel requires some seriously amazing technology and
-        collaboration between countries, private companies, and international
-        space organizations. And while it's not always easy (or cheap), the
-        results are out of this world. Think about the first time humans stepped
-        foot on the moon or when rovers were sent to roam around on Mars.
-      </TextExpander>
-
-      <TextExpander expanded={true} className="box">
-        Space missions have given us incredible insights into our universe and
-        have inspired future generations to keep reaching for the stars. Space
-        travel is a pretty cool thing to think about. Who knows what we'll
-        discover next!
-      </TextExpander>
-      {/* <TipCalc /> */}
-      {/* <Steps /> */}
-      {/* <Counter /> */}
+      <input
+        type="text"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <select value={from} onChange={(e) => setFrom(e.target.value)}>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="CAD">CAD</option>
+        <option value="INR">INR</option>
+      </select>
+      <select value={to} onChange={(e) => setTo(e.target.value)}>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="CAD">CAD</option>
+        <option value="INR">INR</option>
+      </select>
+      <p>
+        {output} {to}
+      </p>
     </div>
   );
 }
