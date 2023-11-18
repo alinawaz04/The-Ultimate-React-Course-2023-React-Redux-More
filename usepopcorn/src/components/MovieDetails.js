@@ -44,7 +44,7 @@ export default function MovieDetails({
     };
 
     onAddWatched(newWatchedMovie);
-    onCloseMovie();
+    // onCloseMovie();
   }
 
   useEffect(
